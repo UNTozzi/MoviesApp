@@ -4,25 +4,30 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 public class Data {
     public static Movie[] searchMovies(String key) {
         ArrayList<Movie> list = createMovie();
 
+        ArrayList<Movie> filter;
+
         if (key == null || key.length() == 0) {
-            return list.toArray(new Movie[0]);
+            filter = list;
         }
         else {
-            ArrayList<Movie> filter = new ArrayList<>();
+            filter = new ArrayList<>();
             for (Movie movie : list) {
                 String name = movie.getTitle();
                 if (name.toUpperCase().contains(key.toUpperCase())) {
                     filter.add(movie);
                 }
             }
-            return filter.toArray(new Movie[0]);
         }
+        Movie[] movies = filter.toArray(new Movie[0]);
+        Arrays.sort(movies);
+        return movies;
     }
 
     public static ArrayList<String> generateMoviesList() {

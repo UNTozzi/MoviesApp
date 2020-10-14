@@ -15,7 +15,7 @@ import br.usjt.ads20.moviesapp.model.Movie;
 import static br.usjt.ads20.moviesapp.model.Data.searchMovies;
 
 public class ListMoviesActivity extends AppCompatActivity {
-    public static final String DESCRIPTION = "br.usjt.ads20.moviesapp.description";
+    public static final String MOVIE = "br.usjt.ads20.moviesapp.movie";
     Movie[] movies;
     private Activity activity;
 
@@ -35,7 +35,7 @@ public class ListMoviesActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
                 Intent itemClickedIntent = new Intent(activity, MovieDetailActivity.class);
-                itemClickedIntent.putExtra(DESCRIPTION, movies[index].getTitle());
+                itemClickedIntent.putExtra(MOVIE, movies[index]);
                 startActivity(itemClickedIntent);
             }
         });

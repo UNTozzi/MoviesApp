@@ -1,8 +1,9 @@
 package br.usjt.ads20.moviesapp.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Movie {
+public class Movie implements Serializable, Comparable<Movie> {
     private int id;
     private String title;
     private String description;
@@ -98,5 +99,10 @@ public class Movie {
                 ", director='" + director + '\'' +
                 ", category='" + category + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Movie movie) {
+        return getTitle().compareTo(movie.getTitle());
     }
 }

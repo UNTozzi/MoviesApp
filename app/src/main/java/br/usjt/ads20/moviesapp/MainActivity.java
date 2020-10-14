@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        txtName = (EditText)findViewById(R.id.search_movie);
+        txtName = (EditText)findViewById(R.id.searchQueue);
     }
 
     public void searchMovies(View view) {

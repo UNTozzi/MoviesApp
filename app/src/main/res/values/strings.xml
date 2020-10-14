@@ -2,4 +2,8 @@
     <string name="app_name">MoviesApp</string>
     <string name="searchMovie">Movie name</string>
     <string name="button_search">Search</string>
+    <string name="lblCategory">Category</string>
+    <string name="lblDirector">Director</string>
+    <string name="lblRelease">Release Date</string>
+    <string name="lblPopularity">Popularity</string>
 </resources>
