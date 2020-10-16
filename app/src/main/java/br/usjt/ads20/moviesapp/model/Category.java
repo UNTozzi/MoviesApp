@@ -1,6 +1,7 @@
 package br.usjt.ads20.moviesapp.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Category implements Serializable {
     private int id;
@@ -10,6 +11,8 @@ public class Category implements Serializable {
         this.id = id;
         this.name = name;
     }
+
+    public Category() {}
 
     public int getId() {
         return id;
@@ -33,5 +36,18 @@ public class Category implements Serializable {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return id == category.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

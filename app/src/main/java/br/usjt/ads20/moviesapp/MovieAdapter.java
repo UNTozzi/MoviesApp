@@ -13,16 +13,19 @@ import android.widget.TextView;
 import java.util.Hashtable;
 
 import br.usjt.ads20.moviesapp.model.Movie;
+import br.usjt.ads20.moviesapp.model.Poster;
 
 public class MovieAdapter extends BaseAdapter implements SectionIndexer {
     private Movie[] movies;
+    Poster[] images;
     private Context context;
     private Object[] sectionHeaders;
     private Hashtable<Integer, Integer> sectionForPositionMap;
     private Hashtable<Integer, Integer> positionToSectionMap;
 
-    public MovieAdapter(Context context, Movie[] movies) {
+    public MovieAdapter(Context context, Movie[] movies, Poster[] images) {
         this.movies = movies;
+        this.images = images;
         this.context = context;
         sectionHeaders = SectionIndexBuilder.buildSectionHeaders(movies);
         positionToSectionMap = SectionIndexBuilder.buildPositionForSectionMap(movies);
@@ -63,10 +66,8 @@ public class MovieAdapter extends BaseAdapter implements SectionIndexer {
             view.setTag(viewHolder);
         }
 
-        Drawable drawable = Util.getDrawable(context, movies[index].getPosterPath().substring(0, movies[index].getPosterPath().length()-4).toLowerCase());
-
         ViewHolder viewHolder = (ViewHolder)view.getTag();
-        viewHolder.getMoviePoster().setImageDrawable(drawable);
+        viewHolder.getMoviePoster().setImageBitmap(images[index].getPoster());
         viewHolder.getMovieName().setText(movies[index].getTitle());
         //Locale locale = new Locale("pt", "BR");
         String lblCat = context.getResources().getString(R.string.lblCategory);

@@ -6,4 +6,7 @@
     <string name="lblDirector">Director</string>
     <string name="lblRelease">Release Date</string>
     <string name="lblPopularity">Popularity</string>
+    <string name="networkError">Network problem</string>
+    <string name="language">en</string>
+    <string name="country">US</string>
 </resources>
