@@ -2,6 +2,7 @@ package br.usjt.ads20.moviesapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import java.io.IOException;
 
 import br.usjt.ads20.moviesapp.model.Movie;
+import br.usjt.ads20.moviesapp.model.MovieDB;
 import br.usjt.ads20.moviesapp.model.MovieNetwork;
 
 public class MovieDetailActivity extends AppCompatActivity {
@@ -23,11 +25,14 @@ public class MovieDetailActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Movie movie;
     private String imgUrl = "https://image.tmdb.org/t/p/w780";
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
+
+        context = this;
 
         backdrop = (ImageView)findViewById(R.id.backdropView);
 
@@ -50,29 +55,53 @@ public class MovieDetailActivity extends AppCompatActivity {
         progressBar = (ProgressBar)findViewById(R.id.progressBarDetail);
         if (MovieNetwork.isConnected(this)) {
             progressBar.setVisibility(View.VISIBLE);
-            new DownloadBackdrop().execute(imgUrl + movie.getBackdropPath());
+            new DownloadBackdrop().execute(movie);
         } else {
             String msg = this.getResources().getString(R.string.networkError);
             Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
             toast.show();
+            progressBar.setVisibility(View.VISIBLE);
+            new LoadBackdropDB().execute(movie);
         }
     }
 
-    private class DownloadBackdrop extends AsyncTask<String, Void, Bitmap> {
+    private class DownloadBackdrop extends AsyncTask<Movie, Void, Bitmap> {
 
         @Override
-        protected Bitmap doInBackground(String... strings) {
+        protected Bitmap doInBackground(Movie... movies) {
             Bitmap img = null;
             try {
-                img = MovieNetwork.searchImages(strings[0]);
+                img = MovieNetwork.searchImages(imgUrl + movies[0].getBackdropPath());
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            MovieDB db = new MovieDB(context);
+            db.updateBackdrop(movies[0].getId(), img);
             return img;
         }
 
         protected void onPostExecute(Bitmap img) {
             backdrop.setImageBitmap(img);
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+
+    }
+    private class LoadBackdropDB extends AsyncTask<Movie, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(Movie... movies) {
+            Bitmap img = null;
+            MovieDB db = new MovieDB(context);
+            img = db.searchBackdrop(movies[0].getId());
+
+            return img;
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap img){
+            if (img != null) {
+                backdrop.setImageBitmap(img);
+            }
             progressBar.setVisibility(View.INVISIBLE);
         }
     }

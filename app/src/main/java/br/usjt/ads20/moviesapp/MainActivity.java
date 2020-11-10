@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import br.usjt.ads20.moviesapp.model.Category;
 import br.usjt.ads20.moviesapp.model.Data;
 import br.usjt.ads20.moviesapp.model.Movie;
+import br.usjt.ads20.moviesapp.model.MovieDB;
 import br.usjt.ads20.moviesapp.model.MovieNetwork;
 import br.usjt.ads20.moviesapp.model.Poster;
 
@@ -55,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             String msg = this.getResources().getString(R.string.networkError);
             Toast toast = Toast.makeText(this, msg, Toast.LENGTH_LONG);
             toast.show();
+            progressBar.setVisibility(View.VISIBLE);
+            new LoadMovieDB().execute();
         }
     }
 
@@ -85,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
                     images.add(p);
                 }
                 Data.setImages(images);
+                MovieDB movieDB = new MovieDB(context);
+                movieDB.saveMovies(movies);
+                movieDB.updatePosters(images);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -93,14 +99,47 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(ArrayList<Movie> movies){
             Intent intent = new Intent(context, ListMoviesActivity.class);
-            String nome = txtName.getText().toString();
-            intent.putExtra(NAME, nome);
+
+            MovieDB db = new MovieDB(context);
+            movies = db.searchMovies();
+
+            String name = txtName.getText().toString();
+            intent.putExtra(NAME, name);
             intent.putExtra(MOVIES, movies);
             progressBar.setVisibility(View.INVISIBLE);
             startActivity(intent);
         }
     }
-    
+
+    private class LoadMovieDB extends AsyncTask<String, Void, ArrayList<Movie>> {
+
+        @Override
+        protected ArrayList<Movie> doInBackground(String... strings) {
+            MovieDB db = new MovieDB(context);
+
+            ArrayList<Movie> movies = db.searchMovies();
+            ArrayList<Poster> posters = db.searchPosters();
+            Data.setImages(posters);
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Movie> movies) {
+            Intent intent = new Intent(context, ListMoviesActivity.class);
+
+            MovieDB db = new MovieDB(context);
+            movies = db.searchMovies();
+
+            String name = txtName.getText().toString();
+            intent.putExtra(NAME, name);
+            intent.putExtra(MOVIES, movies);
+            progressBar.setVisibility(View.INVISIBLE);
+            startActivity(intent);
+        }
+    }
+
     private String getKey () {
         return "cf13706ef62004b69b751e300efa91ce";
     }
